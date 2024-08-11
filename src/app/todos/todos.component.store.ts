@@ -38,4 +38,20 @@ export class TodosStore extends ComponentStore<TodoState> {
       ),
     ),
   );
+  readonly delete = this.effect<Todo>((trigger$) =>
+    trigger$.pipe(
+      switchMap((todo) =>
+        this.service.delete(todo).pipe(
+          tapResponse({
+            next: () =>
+              this.patchState((state) => ({
+                ...state,
+                todos: state.todos.filter((t) => t.id !== todo.id),
+              })),
+            error: (err) => console.error(err),
+          }),
+        ),
+      ),
+    ),
+  );
 }
