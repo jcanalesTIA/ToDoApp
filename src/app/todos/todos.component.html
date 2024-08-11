@@ -1,1 +1,59 @@
-<p>todos works!</p>
+<div class="card bg-gray-300">
+  <h2 class="text-center text-5xl">TODO LIST</h2>
+  <div class="flex justify-content-between align-items-center mb-3">
+    <button
+      pButton
+      label="Add Task"
+      icon="pi pi-plus"
+      (click)="this.addTask({ id: 0, userId: 0, title: '', completed: false })"
+    ></button>
+  </div>
+  <p-table [value]="this.store.todos()" responsiveLayout="scroll" [rowHover]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>#</th>
+        <th>Task Name</th>
+        <th>Status</th>
+        <th>Edit</th>
+        <th>Remove</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-todo>
+      <tr>
+        <td>{{ todo.id }}</td>
+        <td>{{ todo.title }}</td>
+        <td>
+          <p-tag
+            [value]="todo.completed ? 'Complete' : 'Todo'"
+            [severity]="todo.completed ? 'success' : 'info'"
+            [icon]="todo.completed ? 'pi pi-check' : ''"
+            rounded="true"
+          >
+          </p-tag>
+        </td>
+
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-warning"
+            (click)="this.editTask(todo)"
+          ></button>
+        </td>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"
+            (click)="store.delete(todo)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <app-todos-edit />
+</div>
