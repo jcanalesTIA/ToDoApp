@@ -1,5 +1,13 @@
 <div class="card bg-gray-300">
   <h2 class="text-center text-5xl">TODO LIST</h2>
+  <div class="flex justify-content-between align-items-center mb-3">
+    <button
+      pButton
+      label="Add Task"
+      icon="pi pi-plus"
+      (click)="this.addTask({ id: 0, userId: 0, title: '', completed: false })"
+    ></button>
+  </div>
   <p-table [value]="this.store.todos()" responsiveLayout="scroll" [rowHover]="true">
     <ng-template pTemplate="header">
       <tr>
@@ -31,6 +39,7 @@
             type="button"
             icon="pi pi-pencil"
             class="p-button-rounded p-button-warning"
+            (click)="this.editTask(todo)"
           ></button>
         </td>
         <td>
@@ -46,10 +55,5 @@
       </tr>
     </ng-template>
   </p-table>
-  <button
-    pButton
-    pRipple
-    label="Add Task"
-    class="p-mt-3 p-button-sm p-button-success"
-  ></button>
+  <app-todos-edit />
 </div>

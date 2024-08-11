@@ -8,11 +8,15 @@ import { TodosComponentService } from './todos.component.service';
 interface TodoState {
   todos: Todo[];
   total: number;
+  selectedTodo: Todo;
+  dialogVisibility: boolean;
 }
 
 const defaultState: TodoState = {
   todos: [],
   total: 0,
+  selectedTodo: { id: 0, userId: 0, title: '', completed: false },
+  dialogVisibility: false,
 };
 
 @Injectable({
@@ -25,6 +29,8 @@ export class TodosStore extends ComponentStore<TodoState> {
   }
 
   readonly todos = this.selectSignal((state) => state.todos);
+  readonly selectedTodo = this.selectSignal((state) => state.selectedTodo);
+  readonly dialogVisibility = this.selectSignal((state) => state.dialogVisibility);
 
   readonly loadTodos = this.effect<void>((trigger$) =>
     trigger$.pipe(
@@ -47,6 +53,24 @@ export class TodosStore extends ComponentStore<TodoState> {
               this.patchState((state) => ({
                 ...state,
                 todos: state.todos.filter((t) => t.id !== todo.id),
+                total: state.total - 1,
+              })),
+            error: (err) => console.error(err),
+          }),
+        ),
+      ),
+    ),
+  );
+
+  readonly update = this.effect<Todo>((trigger$) =>
+    trigger$.pipe(
+      switchMap((todo) =>
+        this.service.update(todo).pipe(
+          tapResponse({
+            next: () =>
+              this.patchState((state) => ({
+                ...state,
+                todos: state.todos.map((t) => (t.id === todo.id ? todo : t)),
               })),
             error: (err) => console.error(err),
           }),

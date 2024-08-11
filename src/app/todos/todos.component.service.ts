@@ -12,6 +12,14 @@ export class TodosComponentService {
     return this.http.get<Todo[]>('https://jsonplaceholder.typicode.com/todos');
   }
   delete(todo: Todo) {
-    return this.http.delete(`https://jsonplaceholder.typicode.com/todos/${todo.id}`);
+    return this.http.delete<void>(
+      `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+    );
+  }
+  update(todo: Todo) {
+    return this.http.put<Todo>(
+      `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+      todo,
+    );
   }
 }
